@@ -57,11 +57,15 @@ app.use((err: Error, req: Request, res: Response, next: any) => {
   res.status(500).json({ message: 'Internal server error', error: err.message });
 });
 
-// Start server
-const PORT = process.env.PORT || 5000;
+// Export app for use in other modules
+export { app, io };
 
-server.listen(PORT, () => {
-  console.log(`
+// Start server only when not running in module mode
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  
+  server.listen(PORT, () => {
+    console.log(`
 ╔════════════════════════════════════════════╗
 ║                                            ║
 ║        🚀 TrackMyORDER Server Running       ║
@@ -70,7 +74,6 @@ server.listen(PORT, () => {
 ║        Environment: ${process.env.NODE_ENV || 'development'}              ║
 ║                                            ║
 ╚════════════════════════════════════════════╝
-  `);
-});
-
-export { io };
+    `);
+  });
+}
